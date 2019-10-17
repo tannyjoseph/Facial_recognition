@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "858252961160",
+    "firebase_url": "https://snep-ceec2.firebaseio.com",
+    "project_id": "snep-ceec2",
+    "storage_bucket": "snep-ceec2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858252961160:android:f3e61b6512a6396c0b463d",
+        "android_client_info": {
+          "package_name": "com.e.snep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858252961160-9c465jm4v5gujfkca69emk9o2v7fb2bh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.e.snep",
+            "certificate_hash": "6505bb275572efca48c64d1c03159e3e2e2b4dfd"
+          }
+        },
+        {
+          "client_id": "858252961160-on8o2crq3k3umqtudj16l22ejj58j7cf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVLOPlQgh67PvfqQ8j-Wz3BDjzGspcyto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858252961160-on8o2crq3k3umqtudj16l22ejj58j7cf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

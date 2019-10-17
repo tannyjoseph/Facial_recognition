@@ -1,5 +1,9 @@
 package com.e.snep;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -45,6 +49,8 @@ import static android.view.View.GONE;
 
 public class FaceFilterActivity extends AppCompatActivity {
     TextGraphic mTextGraphic;
+    FragmentPagerAdapter adapterViewpager;
+
 
     private final Thread observer = new Thread("observer") {
 
@@ -67,7 +73,7 @@ public class FaceFilterActivity extends AppCompatActivity {
     private static final String TAG = "FaceTracker";
 
     private CameraSource mCameraSource = null;
-    private int typeFace = 0;
+    private static int typeFace = 0;
     private int typeFlash = 0;
     private boolean flashmode = false;
     private Camera camera;
@@ -89,7 +95,7 @@ public class FaceFilterActivity extends AppCompatActivity {
     };
 
     private CameraSourcePreview mPreview;
-    private GraphicOverlay mGraphicOverlay;
+    private static GraphicOverlay mGraphicOverlay;
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
@@ -106,6 +112,12 @@ public class FaceFilterActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_face_filter);
+
+        ViewPager viewPager = findViewById(R.id.viewpager);
+
+        adapterViewpager = new MainActivity.MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapterViewpager);
+        viewPager.setCurrentItem(1);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
@@ -227,6 +239,7 @@ public class FaceFilterActivity extends AppCompatActivity {
         ImageButton dog = (ImageButton) findViewById(R.id.dog);
         dog.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                System.out.println("haha");
                 findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
                 typeFace = 11;
                 findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
@@ -583,7 +596,7 @@ public class FaceFilterActivity extends AppCompatActivity {
         }
     }
 
-    private class GraphicTextTracker extends Tracker<String> {
+    public static class GraphicTextTracker extends Tracker<String> {
         private GraphicOverlay mOverlay;
         private TextGraphic mTextGraphic ;
 
@@ -611,7 +624,7 @@ public class FaceFilterActivity extends AppCompatActivity {
      * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
      * uses this factory to create face trackers as needed -- one for each individual.
      */
-    private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
+    static class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override
         public Tracker<Face> create(Face face) {
             return new GraphicFaceTracker(mGraphicOverlay);
@@ -622,7 +635,7 @@ public class FaceFilterActivity extends AppCompatActivity {
      * Face tracker for each detected individual. This maintains a face graphic within the app's
      * associated face overlay.
      */
-    private class GraphicFaceTracker extends Tracker<Face> {
+    static class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
         private FaceGraphic mFaceGraphic;
 
@@ -665,6 +678,33 @@ public class FaceFilterActivity extends AppCompatActivity {
         @Override
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
+        }
+    }
+
+    public static class MyPagerAdapter extends FragmentPagerAdapter {
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+
+            switch (i){
+                case 0:
+                    return ChatFragment.newInstance();
+
+                case 1:
+                    return CamFragment.newInstance();
+
+                case 2:
+                    return Stories.newInstance();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
         }
     }
 }

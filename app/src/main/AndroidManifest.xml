@@ -22,7 +22,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FaceFilterActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -32,7 +31,7 @@
             android:value="face" />
 
         <activity android:name=".ShowCaptureActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".FaceFilterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

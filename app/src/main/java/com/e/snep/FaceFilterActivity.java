@@ -49,8 +49,6 @@ import static android.view.View.GONE;
 
 public class FaceFilterActivity extends AppCompatActivity {
     TextGraphic mTextGraphic;
-    FragmentPagerAdapter adapterViewpager;
-
 
     private final Thread observer = new Thread("observer") {
 
@@ -69,6 +67,8 @@ public class FaceFilterActivity extends AppCompatActivity {
 
         };
     };
+
+    FragmentPagerAdapter adapterViewpager;
 
     private static final String TAG = "FaceTracker";
 
@@ -115,174 +115,175 @@ public class FaceFilterActivity extends AppCompatActivity {
 
         ViewPager viewPager = findViewById(R.id.viewpager);
 
-        adapterViewpager = new MainActivity.MyPagerAdapter(getSupportFragmentManager());
+        adapterViewpager = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapterViewpager);
         viewPager.setCurrentItem(1);
+
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
         //mTextGraphic = new TextGraphic(mGraphicOverlay);
         //mGraphicOverlay.add(mTextGraphic);
 
-        ImageButton face = (ImageButton) findViewById(R.id.face);
-        face.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(findViewById(R.id.scrollView).getVisibility() == GONE){
-                    findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
-                    ((ImageButton) findViewById(R.id.face)).setImageResource(R.drawable.face_select);
-                }else{
-                    findViewById(R.id.scrollView).setVisibility(GONE);
-                    ((ImageButton) findViewById(R.id.face)).setImageResource(R.drawable.face);
-                }
-            }
-        });
-
-        ImageButton no_filter = (ImageButton) findViewById(R.id.no_filter);
-        no_filter.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 0;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton hair = (ImageButton) findViewById(R.id.hair);
-        hair.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 1;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton op = (ImageButton) findViewById(R.id.op);
-        op.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 2;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton snap = (ImageButton) findViewById(R.id.snap);
-        snap.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 3;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton glasses2 = (ImageButton) findViewById(R.id.glasses2);
-        glasses2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 4;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton glasses3 = (ImageButton) findViewById(R.id.glasses3);
-        glasses3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 5;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton glasses4 = (ImageButton) findViewById(R.id.glasses4);
-        glasses4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 6;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton glasses5 = (ImageButton) findViewById(R.id.glasses5);
-        glasses5.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 7;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton mask = (ImageButton) findViewById(R.id.mask);
-        mask.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 8;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton mask2 = (ImageButton) findViewById(R.id.mask2);
-        mask2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 9;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton mask3 = (ImageButton) findViewById(R.id.mask3);
-        mask3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 10;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton dog = (ImageButton) findViewById(R.id.dog);
-        dog.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("haha");
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 11;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton cat2 = (ImageButton) findViewById(R.id.cat2);
-        cat2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
-                typeFace = 12;
-                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
-            }
-        });
-
-        ImageButton button = (ImageButton) findViewById(R.id.change);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            }
-        });
-
-        final ImageButton flash = (ImageButton) findViewById(R.id.flash);
-        flash.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                int blue;
-                if(flashmode==false){
-                    flashmode = true;
-                    blue = 0;
-                }else{
-                    flashmode = false;
-                    blue = 255;
-                }
-                flash.setColorFilter(Color.argb(255, 255, 255, blue));
-            }
-        });
-
-        ImageButton camera = (ImageButton) findViewById(R.id.camera);
-        camera.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //takeImage();
-                onPause();
-            }
-        });
+//        ImageButton face = (ImageButton) findViewById(R.id.face);
+//        face.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                if(findViewById(R.id.scrollView).getVisibility() == GONE){
+//                    findViewById(R.id.scrollView).setVisibility(View.VISIBLE);
+//                    ((ImageButton) findViewById(R.id.face)).setImageResource(R.drawable.face_select);
+//                }else{
+//                    findViewById(R.id.scrollView).setVisibility(GONE);
+//                    ((ImageButton) findViewById(R.id.face)).setImageResource(R.drawable.face);
+//                }
+//            }
+//        });
+//
+//        ImageButton no_filter = (ImageButton) findViewById(R.id.no_filter);
+//        no_filter.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 0;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton hair = (ImageButton) findViewById(R.id.hair);
+//        hair.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 1;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton op = (ImageButton) findViewById(R.id.op);
+//        op.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 2;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton snap = (ImageButton) findViewById(R.id.snap);
+//        snap.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 3;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton glasses2 = (ImageButton) findViewById(R.id.glasses2);
+//        glasses2.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 4;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton glasses3 = (ImageButton) findViewById(R.id.glasses3);
+//        glasses3.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 5;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton glasses4 = (ImageButton) findViewById(R.id.glasses4);
+//        glasses4.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 6;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton glasses5 = (ImageButton) findViewById(R.id.glasses5);
+//        glasses5.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 7;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton mask = (ImageButton) findViewById(R.id.mask);
+//        mask.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 8;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton mask2 = (ImageButton) findViewById(R.id.mask2);
+//        mask2.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 9;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton mask3 = (ImageButton) findViewById(R.id.mask3);
+//        mask3.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 10;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton dog = (ImageButton) findViewById(R.id.dog);
+//        dog.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                System.out.println("haha");
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 11;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton cat2 = (ImageButton) findViewById(R.id.cat2);
+//        cat2.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background);
+//                typeFace = 12;
+//                findViewById(MASK[typeFace]).setBackgroundResource(R.drawable.round_background_select);
+//            }
+//        });
+//
+//        ImageButton button = (ImageButton) findViewById(R.id.change);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//            }
+//        });
+//
+//        final ImageButton flash = (ImageButton) findViewById(R.id.flash);
+//        flash.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                int blue;
+//                if(flashmode==false){
+//                    flashmode = true;
+//                    blue = 0;
+//                }else{
+//                    flashmode = false;
+//                    blue = 255;
+//                }
+//                flash.setColorFilter(Color.argb(255, 255, 255, blue));
+//            }
+//        });
+//
+//        ImageButton camera = (ImageButton) findViewById(R.id.camera);
+//        camera.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //takeImage();
+//                onPause();
+//            }
+//        });
 
 
 
@@ -496,7 +497,7 @@ public class FaceFilterActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mPreview.stop();
+//        mPreview.stop();
     }
 
     /**
@@ -579,13 +580,7 @@ public class FaceFilterActivity extends AppCompatActivity {
         }
 
         if (mCameraSource != null) {
-            try {
-                mPreview.start(mCameraSource, mGraphicOverlay);
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
-            }
+            //                mPreview.start(mCameraSource, mGraphicOverlay);
         }
     }
 

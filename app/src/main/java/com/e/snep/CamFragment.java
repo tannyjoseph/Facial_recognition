@@ -2,14 +2,21 @@ package com.e.snep;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -35,6 +42,9 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -66,7 +76,7 @@ public class CamFragment extends Fragment {
                 //mTextGraphic.updateText(2);
             }
 
-        };
+        }
     };
 
     private static final String TAG = "FaceTracker";
@@ -403,6 +413,91 @@ public class CamFragment extends Fragment {
         return view;
    }
 
+    private void takeImage() {
+        try{
+            //openCamera(CameraInfo.CAMERA_FACING_BACK);
+            //releaseCameraSource();
+            //releaseCamera();
+            //openCamera(CameraInfo.CAMERA_FACING_BACK);
+            //setUpCamera(camera);
+            //Thread.sleep(1000);
+            mCameraSource.takePicture(null, new CameraSource.PictureCallback() {
+
+                private File imageFile;
+                @Override
+                public void onPictureTaken(byte[] bytes) {
+                    try {
+                        // convert byte array into bitmap
+                        Bitmap loadedImage = null;
+                        Bitmap rotatedBitmap = null;
+                        loadedImage = BitmapFactory.decodeByteArray(bytes, 0,
+                                bytes.length);
+
+                        // rotate Image
+                        Matrix rotateMatrix = new Matrix();
+                        rotateMatrix.postRotate(getActivity().getWindowManager().getDefaultDisplay().getRotation());
+                        rotatedBitmap = Bitmap.createBitmap(loadedImage, 0, 0,
+                                loadedImage.getWidth(), loadedImage.getHeight(),
+                                rotateMatrix, false);
+                        String state = Environment.getExternalStorageState();
+                        File folder = null;
+                        if (state.contains(Environment.MEDIA_MOUNTED)) {
+                            folder = new File(Environment
+                                    .getExternalStorageDirectory()+"/faceFilter");
+                        } else {
+                            folder = new File(Environment
+                                    .getExternalStorageDirectory() + "/faceFilter");
+                        }
+
+                        boolean success = true;
+                        if (!folder.exists()) {
+                            success = folder.mkdirs();
+                        }
+                        if (success) {
+                            java.util.Date date = new java.util.Date();
+                            imageFile = new File(folder.getAbsolutePath()
+                                    + File.separator
+                                    //+ new Timestamp(date.getTime()).toString()
+                                    + "Image.jpg");
+
+                            imageFile.createNewFile();
+                        } else {
+                            Toast.makeText(getActivity().getBaseContext(), "Image Not saved",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+
+                        // save image into gallery
+                        rotatedBitmap = resize(rotatedBitmap, 800, 600);
+                        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+
+                        FileOutputStream fout = new FileOutputStream(imageFile);
+                        fout.write(ostream.toByteArray());
+                        fout.close();
+                        ContentValues values = new ContentValues();
+
+                        values.put(MediaStore.Images.Media.DATE_TAKEN,
+                                System.currentTimeMillis());
+                        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                        values.put(MediaStore.MediaColumns.DATA,
+                                imageFile.getAbsolutePath());
+
+//                        setResult(Activity.RESULT_OK); //add this
+//                        finish();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }catch (Exception ex){
+        }
+
+    }
+
+
     private Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
         if (maxHeight > 0 && maxWidth > 0) {
             int width = image.getWidth();
@@ -615,6 +710,66 @@ public class CamFragment extends Fragment {
             mOverlay.remove(mFaceGraphic);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        startCameraSource();
+    }
+
+    /**
+     * Stops the camera.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPreview.stop();
+    }
+
+    /**
+     * Releases the resources associated with the camera source, the associated detector, and the
+     * rest of the processing pipeline.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mCameraSource != null) {
+            mCameraSource.release();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode != RC_HANDLE_CAMERA_PERM) {
+            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Camera permission granted - initialize the camera source");
+            // we have permission, so create the camerasource
+            createCameraSource();
+            return;
+        }
+
+        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+//                finish();
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+        builder.setTitle("Face Tracker sample")
+                .setMessage(R.string.no_camera_permission)
+                .setPositiveButton(R.string.ok, listener)
+                .show();
+    }
+
 
 
 }
